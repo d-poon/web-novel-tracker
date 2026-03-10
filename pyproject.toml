@@ -1,3 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "web-novel-tracker"
+version = "0.1.0"
+description = "CLI tool for tracking web novels"
+requires-python = ">=3.11"
+dependencies = [
+    "typer"
+]
+
+[project.scripts]
+novel-tracker = "novel_tracker.cli.app:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [tool.ruff]
 line-length = 88
 target-version = "py311"
