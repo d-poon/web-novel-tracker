@@ -1,15 +1,15 @@
 import typer
 
-from novel_tracker.cli.builders import build_novel, build_sort_by_input
-from novel_tracker.database.queries import initialize_db
-from novel_tracker.models.novel import Novel
-from novel_tracker.services.novel_services import (
+from novel_tracker.application.novel_services import (
     add_novel_service,
     delete_novel_service,
     get_novel_service,
     list_novels_service,
     update_novel_service,
 )
+from novel_tracker.cli.builders import build_novel, build_sort_by_input
+from novel_tracker.database.queries import initialize_db
+from novel_tracker.models.novel import Novel
 
 
 def register_commands(app: typer.Typer):
