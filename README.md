@@ -7,6 +7,11 @@ A Python CLI application for tracking reading progress across multiple web novel
 This project was built to practice clean Python architecture, CLI tooling,
 and testable design aligned with software quality engineering practices.
 
+## Development
+
+Project progress is tracked using a GitHub Project Board:
+
+👉 https://github.com/users/d-poon/projects/1
 
 ## Features
 
