@@ -1,4 +1,4 @@
-from novel_tracker.cli.main import app
+from novel_tracker.cli.app import app
 
 if __name__ == "__main__":
     app()
