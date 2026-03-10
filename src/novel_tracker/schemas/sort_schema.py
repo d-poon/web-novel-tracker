@@ -2,8 +2,8 @@ import enum
 
 
 class NovelSortField(enum.StrEnum):
-    title = "title"
-    site = "site"
-    url = "url"
-    current_chapter = "current_chapter"
-    last_read_date = "last_read_date"
+    TITLE = "title"
+    SITE = "site"
+    URL = "url"
+    CURRENT_CHAPTER = "current_chapter"
+    LAST_READ_DATE = "last_read_date"

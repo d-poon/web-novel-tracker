@@ -1,23 +1,16 @@
 import typer
 
-from novel_tracker.application.novel_services import (
+from novel_tracker.application.novel_service import (
     add_novel_service,
     delete_novel_service,
     get_novel_service,
     list_novels_service,
     update_novel_service,
 )
-from novel_tracker.cli.builders import build_novel, build_sort_by_input
-from novel_tracker.database.queries import initialize_db
+from novel_tracker.cli.builders import build_novel
+from novel_tracker.schemas.sort_schema import NovelSortField
 
 app = typer.Typer(help="Manage your web novel tracking with ease.")
-
-
-@app.command()
-def init():
-    """Initialize the database and necessary files."""
-    initialize_db()
-    typer.echo("Web Novel Tracker initialized.")
 
 
 @app.command()
@@ -28,7 +21,9 @@ def add(novel=build_novel):
 
 @app.command(name="list")
 @app.command(name="ls")
-def list_novels(sort_by=build_sort_by_input):
+def list_novels(
+    sort_by: NovelSortField = NovelSortField.TITLE,
+):
     """List all tracked novels."""
     list_novels_service(sort_by)
 

@@ -43,7 +43,7 @@ This separation allows business logic to be tested independently from the CLI.
 Before using the tracker, initialize the SQLite database.
 
 ```bash
-python -m novel_tracker init
+python -m novel_tracker db init
 ```
 
 Output:
@@ -57,7 +57,7 @@ Web Novel Tracker initialized.
 ### Add a New Novel
 
 ```bash
-python -m novel_tracker add
+python -m novel_tracker novel add
 ```
 
 The CLI will prompt for the required fields.
@@ -78,13 +78,13 @@ Notes: Starting the second arc
 ### List Tracked Novels
 
 ```bash
-python -m novel_tracker list
+python -m novel_tracker novel list
 ```
 
 or
 
 ```bash
-python -m novel_tracker ls
+python -m novel_tracker novel ls
 ```
 
 Example output:
@@ -101,7 +101,7 @@ Reverend Insanity       Webnovel   450
 ### Get Details for a Specific Novel
 
 ```bash
-python -m novel_tracker get "Lord of the Mysteries"
+python -m novel_tracker novel get "Lord of the Mysteries"
 ```
 
 Example output:
@@ -119,7 +119,7 @@ Notes: Starting the second arc
 ### Update an Existing Novel
 
 ```bash
-python -m novel_tracker update
+python -m novel_tracker novel update
 ```
 
 The CLI will prompt for updated fields.
@@ -138,7 +138,7 @@ Notes: Finished arc 2
 ### Delete a Novel
 
 ```bash
-python -m novel_tracker delete "Lord of the Mysteries"
+python -m novel_tracker novel delete "Lord of the Mysteries"
 ```
 
 ---
@@ -146,13 +146,13 @@ python -m novel_tracker delete "Lord of the Mysteries"
 ### Sort Results When Listing
 
 ```bash
-python -m novel_tracker list --sort-by title
+python -m novel_tracker novel list --sort-by title
 ```
 
 or
 
 ```bash
-python -m novel_tracker list --sort-by last_read_date
+python -m novel_tracker novel list --sort-by last_read_date
 ```
 
 ---
