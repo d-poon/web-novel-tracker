@@ -1,16 +1,21 @@
-<type>: <short summary>
+<type>(scope): <short summary>
 
-Details:
-- what changed
-- why it changed
+Why:
+- why this change was needed
+
+What:
+- key changes made
+
+Testing:
+- how the change was verified
 
 Issue:
-Fixes #
+Closes #
 
 # Types:
 # feat: new feature
 # fix: bug fix
-# docs: documentation
 # refactor: code change without behavior change
 # test: add or update tests
+# docs: documentation
 # chore: maintenance
