@@ -16,9 +16,7 @@ and testable design aligned with software quality engineering practices.
 - Sort and filter tracked novels
 - SQLite persistent storage
 - CLI interface built with Typer
-- Unit tested with Pytest
 - Linting via Ruff
-- CI validation via GitHub Actions
 
 ## Architecture
 

@@ -1,0 +1,19 @@
+# <type>: <short summary>
+
+# Types:
+# feat: new feature
+# fix: bug fix
+# docs: documentation
+# refactor: code change without behavior change
+# test: add or update tests
+# chore: maintenance
+
+# Example:
+# feat: add CLI command for deleting novels
+
+# Details (optional):
+# - what changed
+# - why it changed
+
+# Issue:
+# Fixes #
