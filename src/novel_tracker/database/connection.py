@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 
-DB_NAME = Path("data")
+DB_NAME = Path("runtime/data")
 DB_NAME.mkdir(exist_ok=True)
 
 DB_NAME = DB_NAME / "novels.db"
