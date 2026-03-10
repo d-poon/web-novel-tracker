@@ -36,6 +36,3 @@ htmlcov/
 
 # MyPy
 .mypy_cache/
-
-# Packaging artifacts
-*.egg-info/
