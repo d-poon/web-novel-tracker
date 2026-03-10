@@ -1,4 +1,11 @@
-# <type>: <short summary>
+<type>: <short summary>
+
+Details:
+- what changed
+- why it changed
+
+Issue:
+Fixes #
 
 # Types:
 # feat: new feature
@@ -7,13 +14,3 @@
 # refactor: code change without behavior change
 # test: add or update tests
 # chore: maintenance
-
-# Example:
-# feat: add CLI command for deleting novels
-
-# Details (optional):
-# - what changed
-# - why it changed
-
-# Issue:
-# Fixes #
