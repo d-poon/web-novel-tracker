@@ -9,7 +9,6 @@ from novel_tracker.application.novel_services import (
 )
 from novel_tracker.cli.builders import build_novel, build_sort_by_input
 from novel_tracker.database.queries import initialize_db
-from novel_tracker.models.novel import Novel
 
 app = typer.Typer(help="Manage your web novel tracking with ease.")
 
@@ -22,14 +21,14 @@ def init():
 
 
 @app.command()
-def add(novel: Novel = build_novel):
+def add(novel=build_novel):
     """Add a new novel to the tracker."""
     add_novel_service(novel)
 
 
 @app.command(name="list")
 @app.command(name="ls")
-def list_novels(sort_by: str = build_sort_by_input):
+def list_novels(sort_by=build_sort_by_input):
     """List all tracked novels."""
     list_novels_service(sort_by)
 
@@ -41,7 +40,7 @@ def get(title: str):
 
 
 @app.command()
-def update(novel: Novel = build_novel):
+def update(novel=build_novel):
     """Update details of an existing novel."""
     update_novel_service(novel)
 
