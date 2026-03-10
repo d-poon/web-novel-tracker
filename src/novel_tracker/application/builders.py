@@ -1,7 +1,7 @@
 from novel_tracker.cli.arguments import (
     SORT_BY_OPTION,
 )
-from novel_tracker.models.novel import Novel
+from novel_tracker.domain.models.novel import Novel
 from novel_tracker.schemas.novel_schema import NovelCreate
 from novel_tracker.schemas.sort_schema import NovelSortField
 

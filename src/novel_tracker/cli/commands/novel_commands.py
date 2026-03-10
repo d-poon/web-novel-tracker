@@ -1,5 +1,6 @@
 import typer
 
+from novel_tracker.application.builders import build_novel
 from novel_tracker.application.novel_service import (
     add_novel_service,
     delete_novel_service,
@@ -7,7 +8,6 @@ from novel_tracker.application.novel_service import (
     list_novels_service,
     update_novel_service,
 )
-from novel_tracker.cli.builders import build_novel
 from novel_tracker.schemas.sort_schema import NovelSortField
 
 app = typer.Typer(help="Manage your web novel tracking with ease.")

@@ -1,5 +1,5 @@
-from novel_tracker.database.queries import execute_query
-from novel_tracker.models.novel import row_to_novel
+from novel_tracker.domain.models.novel import row_to_novel
+from novel_tracker.infrastructure.database.queries import execute_query
 
 
 def total_novels():

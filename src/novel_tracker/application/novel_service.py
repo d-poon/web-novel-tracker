@@ -3,11 +3,11 @@ from dataclasses import asdict
 
 import typer
 
-from novel_tracker.formatters.formatters import (
+from novel_tracker.cli.formatters import (
     format_novel_list_table,
     format_novel_typer,
 )
-from novel_tracker.models.novel import Novel
+from novel_tracker.domain.models.novel import Novel
 from novel_tracker.repositories.novel_repository import (
     add_novel,
     delete_novel,
