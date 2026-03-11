@@ -22,7 +22,7 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-pythonpath = ["."]
+pythonpath = ["src"]
 
 [project.scripts]
 novel-tracker = "novel_tracker.cli.app:app"

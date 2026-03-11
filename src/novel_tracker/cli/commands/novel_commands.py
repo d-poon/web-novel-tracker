@@ -8,7 +8,7 @@ from novel_tracker.application.novel_service import (
     list_novels_service,
     update_novel_service,
 )
-from novel_tracker.schemas.sort_schema import NovelSortField
+from novel_tracker.schemas.sort_input import NovelSortField
 
 app = typer.Typer(help="Manage your web novel tracking with ease.")
 

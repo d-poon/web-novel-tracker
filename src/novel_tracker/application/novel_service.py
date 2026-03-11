@@ -15,7 +15,7 @@ from novel_tracker.domain.repositories.novel_repository import (
     list_novels,
     update_novel,
 )
-from novel_tracker.schemas.sort_schema import NovelSortField
+from novel_tracker.schemas.sort_input import NovelSortField
 
 logger = logging.getLogger(__name__)
 
