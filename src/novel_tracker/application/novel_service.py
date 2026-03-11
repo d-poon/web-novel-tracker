@@ -8,7 +8,7 @@ from novel_tracker.cli.formatters import (
     format_novel_typer,
 )
 from novel_tracker.domain.models.novel import Novel
-from novel_tracker.repositories.novel_repository import (
+from novel_tracker.domain.repositories.novel_repository import (
     add_novel,
     delete_novel,
     get_novel_by_title,
