@@ -7,6 +7,7 @@
 ![Pytest](https://img.shields.io/badge/tested%20with-pytest-0A9EDC)
 ![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
 ![Architecture](https://img.shields.io/badge/architecture-layered-blueviolet)
+![Tests](https://github.com/d-poon/web-novel-tracker/actions/workflows/tests.yml/badge.svg)
 
 A Python CLI application for tracking reading progress across multiple web novels.
 
