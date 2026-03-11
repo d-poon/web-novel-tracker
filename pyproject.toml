@@ -7,9 +7,22 @@ name = "web-novel-tracker"
 version = "0.1.0"
 description = "CLI tool for tracking web novels"
 requires-python = ">=3.11"
+
 dependencies = [
-    "typer"
+    "typer>=0.9"
 ]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+pythonpath = ["."]
 
 [project.scripts]
 novel-tracker = "novel_tracker.cli.app:app"

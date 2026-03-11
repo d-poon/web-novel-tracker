@@ -36,6 +36,22 @@ Project progress is tracked using a GitHub Project Board:
 
 👉 https://github.com/users/d-poon/projects/1
 
+### Setup Development Environment
+
+Clone the repository and install dependencies:
+
+pip install .[dev]
+
+### Running Tests
+
+Run the test suite with:
+
+pytest
+
+Run tests with coverage:
+
+pytest --cov=novel_tracker
+
 ## Features
 
 - Add and track web novels
