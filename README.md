@@ -1,11 +1,34 @@
 # Web Novel Tracker (CLI)
 
+![Python](https://img.shields.io/badge/python-3.11-blue)
+![CLI](https://img.shields.io/badge/CLI-Typer-green)
+![Lint](https://img.shields.io/badge/lint-ruff-yellow)
+![Database](https://img.shields.io/badge/database-SQLite-lightgrey)
+
 A Python CLI application for tracking reading progress across multiple web novels.
 
 ## Engineering Focus
 
 This project was built to practice clean Python architecture, CLI tooling,
 and testable design aligned with software quality engineering practices.
+
+## Installation
+
+Clone the repository:
+
+git clone https://github.com/d-poon/web-novel-tracker.git
+
+cd web-novel-tracker
+
+Create a virtual environment:
+
+python -m venv venv
+source venv/bin/activate  # Linux / Mac
+venv\Scripts\activate     # Windows
+
+Install dependencies:
+
+pip install -e .
 
 ## Development
 
@@ -23,23 +46,60 @@ Project progress is tracked using a GitHub Project Board:
 - CLI interface built with Typer
 - Linting via Ruff
 
+## Technology Stack
+
+Python 3.11+
+
+Core tools:
+
+- Typer (CLI framework)
+- SQLite (local persistence)
+- Pydantic (data validation)
+- Ruff (linting)
+- Pytest (planned testing framework)
+
+Development tooling:
+
+- GitHub Actions (CI)
+- GitHub Projects (task tracking)
+
 ## Architecture
 
-The project follows a layered architecture:
+The project follows a layered architecture designed to separate concerns
+and keep business logic independent from infrastructure.
 
-CLI Layer
-↓
-Service Layer
-↓
+User CLI
+   │
+   ▼
+CLI Commands (Typer)
+   │
+   ▼
+Application Services
+   │
+   ▼
+Domain Models
+   │
+   ▼
 Repository Layer
-↓
+   │
+   ▼
 SQLite Database
 
-This separation allows business logic to be tested independently from the CLI.
+## Project Structure
 
-## Example Commands
-
-## Example Usage
+web-novel-tracker/
+│
+├── src/novel_tracker/
+│   ├── cli/              # CLI commands and interface
+│   ├── application/      # Application services
+│   ├── domain/           # Core domain models
+│   ├── repositories/     # Repository interfaces
+│   ├── infrastructure/   # Database and external integrations
+│   └── schemas/          # Input validation schemas
+│
+├── tests/                # Test suite
+├── docs/                 # Project documentation
+└── pyproject.toml
 
 ## Example Usage
 
@@ -170,4 +230,20 @@ python -m novel_tracker --help
 
 This displays all available commands and options.
 
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Testing](docs/testing.md)
+- [Project Board](docs/project-board.md)
+- [Data Model](docs/data-model.md)
+
+## Roadmap
+
+Planned improvements:
+
+- Add pytest test suite
+- Improve CLI filtering and sorting
+- Add export/import functionality
+- Improve statistics reporting
+- Expand test coverage
 
