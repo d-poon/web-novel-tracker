@@ -1,6 +1,6 @@
 import logging
 
-from novel_tracker.database.connection import get_connection
+from novel_tracker.infrastructure.database.connection import get_connection
 
 logger = logging.getLogger(__name__)
 
