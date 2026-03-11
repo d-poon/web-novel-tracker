@@ -96,7 +96,7 @@ pytest
 
 Run tests with coverage reporting:
 
-pytest --cov=novel_tracker
+pytest
 
 ## Features
 
