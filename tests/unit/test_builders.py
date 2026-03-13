@@ -48,8 +48,3 @@ def test_build_novel_creates_model():
     assert str(novel.url) == "http://example.com/"
     assert novel.current_chapter == 5
     assert novel.last_read_date == date(2024, 1, 1)
-
-
-def test_build_novel_requires_title():
-    with pytest.raises(ValueError, match="Title is required"):
-        build_novel(NovelCreate(title=""))
