@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import date
 
 
 @dataclass
@@ -7,7 +8,7 @@ class Novel:
     site: str | None = None
     url: str | None = None
     current_chapter: int | None = None
-    last_read_date: str | None = None
+    last_read_date: date | None = None
     notes: str | None = None
 
 
@@ -17,6 +18,8 @@ def row_to_novel(row) -> Novel:
         site=row["site"],
         url=row["url"],
         current_chapter=row["current_chapter"],
-        last_read_date=row["last_read_date"],
+        last_read_date=date.fromisoformat(row["last_read_date"])
+        if row["last_read_date"]
+        else None,
         notes=row["notes"],
     )
