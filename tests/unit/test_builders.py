@@ -65,7 +65,7 @@ class TestBuildNovelFunction:
         assert novel.url == "http://localhost:8000/novel"
         assert novel.current_chapter == 0
         assert novel.last_read_date == date.today()
-        assert novel.notes == ""
+        assert novel.notes is None
 
     def test_build_novel_url_conversion(self):
         """Test that HttpUrl is properly converted to string in Novel model."""

@@ -9,7 +9,7 @@ from novel_tracker.schemas.novel_input import NovelCreate
 
 @pytest.mark.parametrize("input_title", ["   ", "", "\t\n\r"])
 def test_title_blank_raises_value_error(input_title):
-    with pytest.raises(ValueError, match="Title is required"):
+    with pytest.raises(ValidationError, match="Title is required"):
         NovelCreate(title=input_title)
 
 
@@ -34,7 +34,7 @@ def test_title_is_stripped_and_accepts_unicode_and_long():
 
 @pytest.mark.parametrize(
     "site_input,expected",
-    [("  Example Site  ", "Example Site"), ("", None), (None, None), ("   ", "")],
+    [("  Example Site  ", "Example Site"), ("", None), (None, None), ("   ", None)],
 )
 def test_site_trimming_and_empty_handling(site_input, expected):
     n = NovelCreate(title="T", site=site_input)

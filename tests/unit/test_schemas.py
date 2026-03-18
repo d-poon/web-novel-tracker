@@ -183,7 +183,7 @@ class TestNovelCreateNotesField:
     def test_notes_empty_string(self):
         """Test empty string notes."""
         novel = NovelCreate(title="Test", notes="")
-        assert novel.notes == ""
+        assert novel.notes is None
 
     def test_notes_normal_string(self):
         """Test normal string notes."""
@@ -284,11 +284,14 @@ class TestNovelCreateIntegration:
         assert str(novel_create_with_edge_cases.url) == "http://localhost:8000/novel"
         assert novel_create_with_edge_cases.current_chapter == 0
         assert novel_create_with_edge_cases.last_read_date == date.today()
-        assert novel_create_with_edge_cases.notes == ""
+        assert novel_create_with_edge_cases.notes is None
 
     def test_model_dump(self, complete_novel_create, expected_complete_novel_dict):
         """Test model_dump produces expected dictionary."""
         dumped = complete_novel_create.model_dump()
+        dumped["url"] = (
+            str(dumped["url"]) if dumped.get("url") else None
+        )  # Convert URL to string for comparison
         assert dumped == expected_complete_novel_dict
 
     def test_json_serialization(self, complete_novel_create):

@@ -3,11 +3,19 @@ from datetime import date
 from pydantic import BaseModel, HttpUrl, field_validator
 
 
+def normalize_string_fields(value):
+    if value is None:
+        return None
+    if isinstance(value, str):
+        value = value.strip()
+        return value if value else None
+
+
 class NovelCreate(BaseModel):
     title: str
     site: str | None = None
     url: HttpUrl | None = None
-    current_chapter: int | None = 0
+    current_chapter: int = 0
     last_read_date: date | None = None
     notes: str | None = None
 
@@ -37,6 +45,6 @@ class NovelCreate(BaseModel):
         # Reject floats, strings, lists, dicts, etc.
         raise TypeError("Invalid type for current_chapter")
 
-    @field_validator("site")
-    def validate_site(cls, value):
-        return value.strip() if value else None
+    @field_validator("notes", "site", mode="before")
+    def normalize_fields(cls, value):
+        return normalize_string_fields(value)

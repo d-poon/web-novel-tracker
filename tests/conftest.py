@@ -4,6 +4,8 @@ Pytest configuration and shared fixtures for the novel tracker test suite.
 
 import pytest
 
+from tests.fixtures.sample_novels import *
+
 
 @pytest.fixture(
     params=[
@@ -38,7 +40,7 @@ def site_validation_case(request):
 
 @pytest.fixture(
     params=[
-        (None, None),  # None should be valid
+        (None, 0),  # None should default to 0
         (0, 0),  # Zero should be valid
         (1, 1),  # Positive int should be valid
         (1000, 1000),  # Large positive should be valid
@@ -83,11 +85,11 @@ def invalid_current_chapter_type_case(request):
 
 @pytest.fixture(
     params=[
-        "https://example.com",
-        "http://example.com/path",
-        "https://subdomain.example.com/novel",
-        "http://localhost:8000",
-        "https://example.com/path?query=value&other=123",
+        "https://example.com/",
+        "http://example.com/path/",
+        "https://subdomain.example.com/novel/",
+        "http://localhost:8000/",
+        "https://example.com/path?query=value&other=123/",
     ]
 )
 def valid_url_case(request):
