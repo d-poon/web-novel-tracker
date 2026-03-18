@@ -21,8 +21,11 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
+minversion = "9.0.0"
 testpaths = ["tests"]
 addopts = [
+    "-s",
+    "--tb=short",
     "--cov=novel_tracker",
     "--cov-report=term-missing",
     "--cov-fail-under=80"

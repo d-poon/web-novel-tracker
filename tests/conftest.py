@@ -4,7 +4,7 @@ Pytest configuration and shared fixtures for the novel tracker test suite.
 
 import pytest
 
-from tests.fixtures.sample_novels import *
+from tests.fixtures.sample_novels import *  # noqa
 
 
 @pytest.fixture(
