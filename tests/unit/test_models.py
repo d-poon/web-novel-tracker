@@ -8,16 +8,22 @@ from novel_tracker.schemas.novel_input import NovelCreate
 
 
 @pytest.mark.parametrize("input_title", ["   ", "", "\t\n\r"])
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_title_blank_raises_value_error(input_title):
     with pytest.raises(ValidationError, match="Title is required"):
         NovelCreate(title=input_title)
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_missing_title_raises_validation_error():
     with pytest.raises(ValidationError):
         NovelCreate()
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_title_is_stripped_and_accepts_unicode_and_long():
     t = "  The Great Novel  "
     n = NovelCreate(title=t)
@@ -36,11 +42,15 @@ def test_title_is_stripped_and_accepts_unicode_and_long():
     "site_input,expected",
     [("  Example Site  ", "Example Site"), ("", None), (None, None), ("   ", None)],
 )
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_site_trimming_and_empty_handling(site_input, expected):
     n = NovelCreate(title="T", site=site_input)
     assert n.site == expected
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_url_accepts_valid_and_rejects_invalid():
     good = NovelCreate(title="T", url="https://example.com/novel")
     assert str(good.url) == "https://example.com/novel"
@@ -49,6 +59,8 @@ def test_url_accepts_valid_and_rejects_invalid():
         NovelCreate(title="T", url="not-a-valid-url")
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_current_chapter_validation_behaviour():
     # valid values
     n0 = NovelCreate(title="T", current_chapter=0)
@@ -82,6 +94,8 @@ def test_current_chapter_validation_behaviour():
     assert n_none.current_chapter == 0
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_last_read_date_parsing_and_validation():
     n = NovelCreate(title="T", last_read_date="2024-01-01")
     assert isinstance(n.last_read_date, date)
@@ -91,6 +105,8 @@ def test_last_read_date_parsing_and_validation():
         NovelCreate(title="T", last_read_date="not-a-date")
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_notes_optional_preserved_and_none():
     n = NovelCreate(title="T", notes="Some notes")
     assert n.notes == "Some notes"
@@ -99,6 +115,8 @@ def test_notes_optional_preserved_and_none():
     assert n2.notes is None
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_novel_dataclass_and_row_to_novel():
     row = {
         "title": "Row Novel",
@@ -120,12 +138,16 @@ def test_novel_dataclass_and_row_to_novel():
     assert novel.notes == "row notes"
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_row_to_novel_missing_key_raises():
     row = {"title": "X"}
     with pytest.raises(KeyError):
         row_to_novel(row)
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_row_to_novel_non_iso_date_raises_value_error():
     row = {
         "title": "Row Novel",
@@ -139,6 +161,8 @@ def test_row_to_novel_non_iso_date_raises_value_error():
         row_to_novel(row)
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_row_to_novel_numeric_chapter_as_string_is_preserved():
     row = {
         "title": "Row Novel",
@@ -152,6 +176,8 @@ def test_row_to_novel_numeric_chapter_as_string_is_preserved():
     assert novel.current_chapter == "3"
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_url_edge_cases_and_scheme_rejection():
     # query params and percent-encoding accepted
     n = NovelCreate(title="T", url="https://example.com/novel?chapter=1&lang=en")
@@ -162,12 +188,16 @@ def test_url_edge_cases_and_scheme_rejection():
         NovelCreate(title="T", url="ftp://example.com/resource")
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_current_chapter_extremely_large():
     big = 10**18
     n = NovelCreate(title="T", current_chapter=big)
     assert n.current_chapter == big
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_last_read_date_leap_and_future_dates():
     n = NovelCreate(title="T", last_read_date="2024-02-29")
     assert n.last_read_date == date.fromisoformat("2024-02-29")
@@ -176,6 +206,8 @@ def test_last_read_date_leap_and_future_dates():
     assert future.last_read_date == date.fromisoformat("2999-01-01")
 
 
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_notes_preserve_large_content():
     large = "x" * 100_000
     n = NovelCreate(title="T", notes=large)

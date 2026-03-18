@@ -19,6 +19,12 @@ def minimal_novel_create():
     return NovelCreate(title="Minimal Novel")
 
 
+# Metadata as booleans
+minimal_novel_create.is_ai_generated = True
+minimal_novel_create.is_human_added = False
+minimal_novel_create.is_human_reviewed = True
+
+
 @pytest.fixture
 def complete_novel_create():
     """Complete NovelCreate with all fields populated."""
@@ -32,12 +38,24 @@ def complete_novel_create():
     )
 
 
+# Metadata as booleans
+complete_novel_create.is_ai_generated = True
+complete_novel_create.is_human_added = False
+complete_novel_create.is_human_reviewed = True
+
+
 @pytest.fixture
 def novel_create_with_whitespace():
     """NovelCreate with leading/trailing whitespace that should be stripped."""
     return NovelCreate(
         title="  Spaced Title  ", site="  Spaced Site  ", notes="  Spaced Notes  "
     )
+
+
+# Metadata as booleans
+novel_create_with_whitespace.is_ai_generated = True
+novel_create_with_whitespace.is_human_added = False
+novel_create_with_whitespace.is_human_reviewed = True
 
 
 @pytest.fixture
@@ -53,6 +71,11 @@ def novel_create_with_edge_cases():
     )
 
 
+# Metadata as booleans
+novel_create_with_edge_cases.is_ai_generated = True
+novel_create_with_edge_cases.is_human_added = False
+novel_create_with_edge_cases.is_human_reviewed = True
+
 # ===== INVALID NOVEL CREATE DATA (for error testing) =====
 
 
@@ -62,10 +85,22 @@ def invalid_novel_data_empty_title():
     return {"title": "", "site": "Valid Site"}
 
 
+# Metadata as booleans
+invalid_novel_data_empty_title.is_ai_generated = True
+invalid_novel_data_empty_title.is_human_added = False
+invalid_novel_data_empty_title.is_human_reviewed = True
+
+
 @pytest.fixture
 def invalid_novel_data_whitespace_title():
     """Data that should fail validation due to whitespace-only title."""
     return {"title": "   \t\n   ", "site": "Valid Site"}
+
+
+# Metadata as booleans
+invalid_novel_data_whitespace_title.is_ai_generated = True
+invalid_novel_data_whitespace_title.is_human_added = False
+invalid_novel_data_whitespace_title.is_human_reviewed = True
 
 
 @pytest.fixture
@@ -74,16 +109,34 @@ def invalid_novel_data_negative_chapter():
     return {"title": "Valid Title", "current_chapter": -1}
 
 
+# Metadata as booleans
+invalid_novel_data_negative_chapter.is_ai_generated = True
+invalid_novel_data_negative_chapter.is_human_added = False
+invalid_novel_data_negative_chapter.is_human_reviewed = True
+
+
 @pytest.fixture
 def invalid_novel_data_wrong_chapter_type():
     """Data that should fail validation due to wrong chapter type."""
     return {"title": "Valid Title", "current_chapter": "not_a_number"}
 
 
+# Metadata as booleans
+invalid_novel_data_wrong_chapter_type.is_ai_generated = True
+invalid_novel_data_wrong_chapter_type.is_human_added = False
+invalid_novel_data_wrong_chapter_type.is_human_reviewed = True
+
+
 @pytest.fixture
 def invalid_novel_data_invalid_url():
     """Data that should fail validation due to invalid URL."""
     return {"title": "Valid Title", "url": "not-a-valid-url"}
+
+
+# Metadata as booleans
+invalid_novel_data_invalid_url.is_ai_generated = True
+invalid_novel_data_invalid_url.is_human_added = False
+invalid_novel_data_invalid_url.is_human_reviewed = True
 
 
 # ===== SORT FIELD ENUM VALUES =====
@@ -101,6 +154,11 @@ def all_sort_fields():
     ]
 
 
+# Metadata as booleans
+all_sort_fields.is_ai_generated = True
+all_sort_fields.is_human_added = False
+all_sort_fields.is_human_reviewed = True
+
 # ===== EXPECTED NOVEL MODEL DATA =====
 
 
@@ -117,6 +175,12 @@ def expected_minimal_novel_dict():
     }
 
 
+# Metadata as booleans
+expected_minimal_novel_dict.is_ai_generated = True
+expected_minimal_novel_dict.is_human_added = False
+expected_minimal_novel_dict.is_human_reviewed = True
+
+
 @pytest.fixture
 def expected_complete_novel_dict():
     """Expected dictionary representation of complete novel."""
@@ -128,6 +192,12 @@ def expected_complete_novel_dict():
         "last_read_date": date(2024, 3, 15),
         "notes": "This is a test novel with all fields filled.",
     }
+
+
+# Metadata as booleans
+expected_complete_novel_dict.is_ai_generated = True
+expected_complete_novel_dict.is_human_added = False
+expected_complete_novel_dict.is_human_reviewed = True
 
 
 @pytest.fixture
@@ -142,6 +212,11 @@ def expected_whitespace_stripped_novel_dict():
         "notes": "Spaced Notes",
     }
 
+
+# Metadata as booleans
+expected_whitespace_stripped_novel_dict.is_ai_generated = True
+expected_whitespace_stripped_novel_dict.is_human_added = False
+expected_whitespace_stripped_novel_dict.is_human_reviewed = True
 
 # ===== PARAMETERIZED TEST CASES =====
 
@@ -162,6 +237,12 @@ def title_validation_case(request):
     return title, should_pass
 
 
+# Metadata as booleans
+title_validation_case.is_ai_generated = True
+title_validation_case.is_human_added = False
+title_validation_case.is_human_reviewed = True
+
+
 @pytest.fixture(
     params=[
         (None, None),  # None should remain None
@@ -175,6 +256,12 @@ def site_validation_case(request):
     """Parameterized fixture for site validation test cases."""
     input_value, expected_output = request.param
     return input_value, expected_output
+
+
+# Metadata as booleans
+site_validation_case.is_ai_generated = True
+site_validation_case.is_human_added = False
+site_validation_case.is_human_reviewed = True
 
 
 @pytest.fixture(
@@ -193,6 +280,12 @@ def valid_current_chapter_case(request):
     return input_value, expected_output
 
 
+# Metadata as booleans
+valid_current_chapter_case.is_ai_generated = True
+valid_current_chapter_case.is_human_added = False
+valid_current_chapter_case.is_human_reviewed = True
+
+
 @pytest.fixture(
     params=[
         (-1, "Current chapter must be a non-negative integer"),  # Negative should fail
@@ -206,6 +299,12 @@ def invalid_current_chapter_case(request):
     """Parameterized fixture for invalid current_chapter values."""
     input_value, expected_error = request.param
     return input_value, expected_error
+
+
+# Metadata as booleans
+invalid_current_chapter_case.is_ai_generated = True
+invalid_current_chapter_case.is_human_added = False
+invalid_current_chapter_case.is_human_reviewed = True
 
 
 @pytest.fixture(
@@ -222,6 +321,12 @@ def invalid_current_chapter_type_case(request):
     return input_value, expected_exception
 
 
+# Metadata as booleans
+invalid_current_chapter_type_case.is_ai_generated = True
+invalid_current_chapter_type_case.is_human_added = False
+invalid_current_chapter_type_case.is_human_reviewed = True
+
+
 @pytest.fixture(
     params=[
         "https://example.com/",
@@ -236,6 +341,12 @@ def valid_url_case(request):
     return request.param
 
 
+# Metadata as booleans
+valid_url_case.is_ai_generated = True
+valid_url_case.is_human_added = False
+valid_url_case.is_human_reviewed = True
+
+
 @pytest.fixture(
     params=[
         "not-a-url",
@@ -248,3 +359,9 @@ def valid_url_case(request):
 def invalid_url_case(request):
     """Parameterized fixture for invalid URL test cases."""
     return request.param
+
+
+# Metadata as booleans
+invalid_url_case.is_ai_generated = True
+invalid_url_case.is_human_added = False
+invalid_url_case.is_human_reviewed = True
