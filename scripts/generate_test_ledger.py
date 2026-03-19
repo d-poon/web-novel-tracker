@@ -4,7 +4,6 @@ import ast
 import importlib.util
 import inspect
 import subprocess
-import sys
 from datetime import date
 from pathlib import Path
 
@@ -63,53 +62,63 @@ def get_test_markers(func_node):
 
 
 def import_fixtures_from_dir(fixtures_path: Path):
-    """Import a module and return all pytest fixture functions"""
+    """
+    Scan a directory of fixture modules and return all fixture functions.
+
+    Uses AST parsing to detect @pytest.fixture decorators, then imports the
+    module only to access function objects and metadata (docstrings, flags).
+    """
     fixtures = []
 
     for file_path in fixtures_path.rglob("*.py"):
-        print(file_path, file_path.exists())
         if file_path.name == "__init__.py":
             continue
 
-        parent_dir = str(file_path.parent)
-        sys.path.insert(0, parent_dir)
-        try:
-            spec = importlib.util.spec_from_file_location(file_path.stem, file_path)
-            module = importlib.util.module_from_spec(spec)
-            sys.modules[file_path.stem] = module
-            spec.loader.exec_module(module)
+        # Step 1 — parse AST to find fixture function names
+        with open(file_path, encoding="utf-8") as f:
+            tree = ast.parse(f.read(), filename=str(file_path))
 
-            for name, obj in inspect.getmembers(module, inspect.isfunction):
-                if file_path.name == "__init__.py":
-                    continue  # Skip __init__.py files
+        fixture_names = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                for dec in node.decorator_list:
+                    # Match @pytest.fixture or @pytest.fixture(...)
+                    if (isinstance(dec, ast.Attribute) and dec.attr == "fixture") or (
+                        isinstance(dec, ast.Call)
+                        and isinstance(dec.func, ast.Attribute)
+                        and dec.func.attr == "fixture"
+                    ):
+                        fixture_names.append(node.name)
 
-                if hasattr(obj, "_pytestfixturefunction"):
-                    print("Found fixture:", name)
+        if not fixture_names:
+            continue  # skip files with no fixtures
 
-                # Check if the function has any of the fixture metadata flags
-                is_pytest_fixture = hasattr(obj, "_pytestfixturefunction")
-                has_metadata_flag = any(hasattr(obj, flag) for flag in FIXTURE_FLAGS)
+        # Step 2 — import the module dynamically
+        spec = importlib.util.spec_from_file_location(file_path.stem, file_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
 
-                if is_pytest_fixture or has_metadata_flag:
-                    fixtures.append((name, obj))
-
-        finally:
-            sys.path.pop(0)
-
-    print(f"Total fixtures found: {len(fixtures)}")
-    for name, obj, path in fixtures:
-        print(
-            f"{name} (from {path.name}) - AI: {getattr(obj, 'is_ai_generated', False)},"
-            f" Human Added: {getattr(obj, 'is_human_added', False)},"
-            f" Human Reviewed: {getattr(obj, 'is_human_reviewed', False)}"
-        )
+        # Step 3 — collect fixture functions and their metadata
+        for name in fixture_names:
+            func = getattr(module, name, None)
+            if not func:
+                continue
+            # Include any metadata flags even if False
+            fixtures.append((name, func))
 
     return fixtures
 
 
-def truncate_string(s, max_length=50):
+def truncate_name(s, max_length=50):
     """Truncate a string to a maximum length, adding ellipsis if needed."""
     return s if len(s) <= max_length else s[: max_length - 3] + "..."
+
+
+def truncate_notes(notes, max_length=80):
+    """Truncate notes to a maximum length for display in the ledger."""
+    if not notes:
+        return ""
+    return notes if len(notes) <= max_length else notes[: max_length - 3] + "..."
 
 
 def shorten_module_path(module_path, max_length=30):
@@ -118,7 +127,7 @@ def shorten_module_path(module_path, max_length=30):
         return module_path
     parts = module_path.split("/")
     if len(parts) <= 2:
-        return truncate_string(module_path, max_length)
+        return truncate_name(module_path, max_length)
     return f"{parts[0]}/.../{parts[-1]}"
 
 
@@ -132,7 +141,7 @@ for py_file in TESTS_DIR.rglob("test_*.py"):
             if isinstance(node, ast.FunctionDef) and node.name.startswith("test_"):
                 markers = get_test_markers(node)
                 entry = {
-                    "name": truncate_string(node.name),
+                    "name": truncate_name(node.name),
                     "module": shorten_module_path(py_file.name),
                     "ai_scaffold": "✅" if AI_MARKER in markers else "",
                     "human_added": "✅" if HUMAN_ADDED in markers else "",
@@ -148,19 +157,15 @@ fixture_entries = []
 fixtures = import_fixtures_from_dir(FIXTURES_DIR)
 
 for name, fix in fixtures:
-    # Read boolean metadata attributes
-    ai_flag = "✅" if getattr(fix, "is_ai_generated", False) else ""
-    human_added_flag = "✅" if getattr(fix, "is_human_added", False) else ""
-    human_reviewed_flag = "✅" if getattr(fix, "is_human_reviewed", False) else ""
     fixture_entries.append(
         {
-            "name": truncate_string(name),
-            "module": shorten_module_path(fix.name),
-            "ai_scaffold": ai_flag,
-            "human_added": human_added_flag,
-            "human_reviewed": human_reviewed_flag,
-            "notes": truncate_string(inspect.getdoc(fix) or ""),
+            "name": name,
+            "module": fix.__module__,
             "type": "fixture",
+            "ai_scaffold": "✅" if getattr(fix, "is_ai_generated", False) else "",
+            "human_added": "✅" if getattr(fix, "is_human_added", False) else "",
+            "human_reviewed": "✅" if getattr(fix, "is_human_reviewed", False) else "",
+            "notes": truncate_notes(inspect.getdoc(fix) or "", 60),
         }
     )
 
@@ -176,15 +181,14 @@ fixture_entries.sort(key=lambda x: x["ai_scaffold"], reverse=True)
 
 def get_column_widths(rows, headers):
     widths = [len(h) for h in headers]
-
     for row in rows:
         for i, cell in enumerate(row):
             widths[i] = max(widths[i], len(str(cell)))
-
     return widths
 
 
 def format_row(row, widths):
+    # Add one space padding on both sides for readability
     return (
         "| "
         + " | ".join(str(cell).ljust(widths[i]) for i, cell in enumerate(row))
@@ -193,14 +197,15 @@ def format_row(row, widths):
 
 
 def entry_to_row(entry):
+    """Convert a fixture or test entry into a table row, truncating long notes."""
     return [
-        entry["name"],
-        entry["module"],
+        truncate_name(entry["name"], 35),
+        truncate_name(entry["module"], 20),
         entry["type"],
         entry["ai_scaffold"],
         entry["human_added"],
         entry["human_reviewed"],
-        entry["notes"],
+        truncate_notes(entry.get("notes", ""), 60),
     ]
 
 
@@ -219,12 +224,9 @@ def generate_markdown_table(entries):
 
     widths = get_column_widths(rows, headers)
 
-    table = []
-    table.append(format_row(headers, widths))
-
+    table = [format_row(headers, widths)]
     # Add separator row
-    table.append("| " + " | ".join("-" * w for w in widths) + "|")
-
+    table.append("| " + " | ".join("-" * w for w in widths) + " |")
     for row in rows:
         table.append(format_row(row, widths))
 
@@ -241,7 +243,7 @@ with OUTPUT_FILE.open("w", encoding="utf-8") as f:
     f.write("## Test Matrix\n\n")
     f.write(generate_markdown_table(test_entries))
 
-    f.write("\n## Fixture Matrix\n\n")
+    f.write("\n\n## Fixture Matrix\n\n")
     f.write(generate_markdown_table(fixture_entries))
 
 print(f"✅ TEST_LEDGER.md generated at {OUTPUT_FILE}")
