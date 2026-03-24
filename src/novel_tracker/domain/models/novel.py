@@ -7,7 +7,7 @@ class Novel:
     title: str
     site: str | None = None
     url: str | None = None
-    current_chapter: int | None = None
+    current_chapter: int | None = 0
     last_read_date: date | None = None
     notes: str | None = None
 

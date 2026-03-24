@@ -18,7 +18,8 @@ class NovelRepository:
     def add_novel(self, novel: Novel):
         execute_query(
             """
-            INSERT INTO novels (title, site, url, current_chapter, last_read_date, notes)
+            INSERT INTO novels (title, site, url, current_chapter,
+              last_read_date, notes)
         VALUES (?, ?, ?, ?, ?, ?)
         """,
             params=(
@@ -35,7 +36,8 @@ class NovelRepository:
 
     def list_novels(self):
         rows = execute_query(
-            "SELECT title, site, url, current_chapter, last_read_date, notes FROM novels",
+            "SELECT title, site, url, current_chapter,"
+            " last_read_date, notes FROM novels",
             fetch_all=True,
         )
         return [row_to_novel(row) for row in rows]

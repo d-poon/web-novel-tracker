@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+import novel_tracker.infrastructure.database.connection as conn_module
 from novel_tracker.domain.models.novel import Novel
 from novel_tracker.domain.repositories.novel_repository import NovelRepository
 from novel_tracker.infrastructure.database.connection import get_connection
@@ -23,7 +24,6 @@ def temp_db(monkeypatch):
     - Creates a temporary file-based database (not in-memory, to match production)
     - Initializes the schema
     - Patches connection.DB_NAME to use the temp database
-    - Cleans up the temporary file after the test
 
     Yields:
         Path: The path to the temporary database file
@@ -34,7 +34,6 @@ def temp_db(monkeypatch):
     temp_file.close()
 
     # Patch the connection module to use our temp database
-    import novel_tracker.infrastructure.database.connection as conn_module
 
     monkeypatch.setattr(conn_module, "DB_NAME", temp_db_path)
 
@@ -42,10 +41,6 @@ def temp_db(monkeypatch):
     initialize_db()
 
     yield temp_db_path
-
-    # Cleanup: remove the temporary database file
-    if temp_db_path.exists():
-        temp_db_path.unlink()
 
 
 # Metadata as booleans
