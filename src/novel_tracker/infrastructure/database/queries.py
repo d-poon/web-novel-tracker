@@ -12,7 +12,7 @@ def initialize_db():
             """
             CREATE TABLE IF NOT EXISTS novels (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL COLLATE NOCASE,
+                title TEXT NOT NULL COLLATE NOCASE UNIQUE,
                 site TEXT,
                 url TEXT,
                 current_chapter INTEGER,

@@ -16,6 +16,14 @@ from novel_tracker.infrastructure.database.connection import get_connection
 from novel_tracker.infrastructure.database.queries import initialize_db
 
 
+def reset_db():
+    """Utility function to reset the database schema."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("DROP TABLE IF EXISTS novels;")
+        conn.commit()
+
+
 @pytest.fixture(scope="function")
 def temp_db(monkeypatch):
     """
@@ -34,8 +42,10 @@ def temp_db(monkeypatch):
     temp_file.close()
 
     # Patch the connection module to use our temp database
-
     monkeypatch.setattr(conn_module, "DB_NAME", temp_db_path)
+
+    # Force clean schema ONLY for tests
+    reset_db()
 
     # Initialize the database schema
     initialize_db()
@@ -45,7 +55,7 @@ def temp_db(monkeypatch):
 
 # Metadata as booleans
 temp_db.is_ai_generated = True
-temp_db.is_human_added = False
+temp_db.is_human_added = True
 temp_db.is_human_reviewed = True
 
 

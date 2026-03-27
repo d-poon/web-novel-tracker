@@ -14,14 +14,12 @@ runner.is_human_added = False
 runner.is_human_reviewed = True
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_update_novel_existing(runner, temp_db):
     """Test updating an existing novel."""
     # Add initial novel
-    runner.invoke(
-        app, ["novel", "add", "--title", "Update Test", "--current-chapter", "1"]
-    )
+    runner.invoke(app, ["novel", "add", "Update Test", "--current-chapter", "1"])
 
     # Update it
     result = runner.invoke(
@@ -29,7 +27,6 @@ def test_update_novel_existing(runner, temp_db):
         [
             "novel",
             "update",
-            "--title",
             "Update Test",
             "--current-chapter",
             "10",
@@ -46,19 +43,19 @@ def test_update_novel_existing(runner, temp_db):
     assert "Updated notes" in get_result.output
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_update_novel_nonexistent(runner, temp_db):
     """Test updating a novel that doesn't exist."""
     result = runner.invoke(
-        app, ["novel", "update", "--title", "Nonexistent", "--current-chapter", "5"]
+        app, ["novel", "update", "Nonexistent", "--current-chapter", "5"]
     )
     assert result.exit_code == 1
     assert "not found" in result.output.lower()
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_update_novel_partial(runner, temp_db):
     """Test updating only some fields of a novel."""
     # Add novel with multiple fields
@@ -67,7 +64,6 @@ def test_update_novel_partial(runner, temp_db):
         [
             "novel",
             "add",
-            "--title",
             "Partial Update",
             "--site",
             "Original Site",
@@ -80,30 +76,27 @@ def test_update_novel_partial(runner, temp_db):
 
     # Update only chapter
     result = runner.invoke(
-        app, ["novel", "update", "--title", "Partial Update", "--current-chapter", "20"]
+        app, ["novel", "update", "Partial Update", "--current-chapter", "20"]
     )
     assert result.exit_code == 0
 
     # Check that other fields remain
     get_result = runner.invoke(app, ["novel", "get", "Partial Update"])
+    print(get_result.output)
     assert "Original Site" in get_result.output
     assert "Chapter 20" in get_result.output
     assert "Original notes" in get_result.output
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_update_novel_clear_fields(runner, temp_db):
     """Test updating a novel to clear optional fields."""
     # Add novel with notes
-    runner.invoke(
-        app, ["novel", "add", "--title", "Clear Test", "--notes", "Some notes"]
-    )
+    runner.invoke(app, ["novel", "add", "Clear Test", "--notes", "Some notes"])
 
     # Update with empty notes (should clear)
-    result = runner.invoke(
-        app, ["novel", "update", "--title", "Clear Test", "--notes", ""]
-    )
+    result = runner.invoke(app, ["novel", "update", "Clear Test", "--notes", ""])
     assert result.exit_code == 0
 
     # Verify notes are cleared
@@ -111,14 +104,14 @@ def test_update_novel_clear_fields(runner, temp_db):
     assert "Some notes" not in get_result.output
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_update_novel_invalid_data(runner, temp_db):
     """Test updating with invalid data."""
-    runner.invoke(app, ["novel", "add", "--title", "Invalid Update"])
+    runner.invoke(app, ["novel", "add", "Invalid Update"])
 
     result = runner.invoke(
-        app, ["novel", "update", "--title", "Invalid Update", "--current-chapter", "-1"]
+        app, ["novel", "update", "Invalid Update", "--current-chapter", "-1"]
     )
     assert result.exit_code == 1
     assert (

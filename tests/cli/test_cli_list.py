@@ -14,8 +14,8 @@ runner.is_human_added = False
 runner.is_human_reviewed = True
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_list_novels_empty(runner, temp_db):
     """Test listing novels when database is empty."""
     result = runner.invoke(app, ["novel", "list"])
@@ -25,18 +25,17 @@ def test_list_novels_empty(runner, temp_db):
     # Should have no rows
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_list_novels_with_data(runner, temp_db):
     """Test listing novels with some data."""
     # Add some novels
-    runner.invoke(app, ["novel", "add", "--title", "Novel A", "--site", "Site A"])
+    runner.invoke(app, ["novel", "add", "Novel A", "--site", "Site A"])
     runner.invoke(
         app,
         [
             "novel",
             "add",
-            "--title",
             "Novel B",
             "--site",
             "Site B",
@@ -54,13 +53,13 @@ def test_list_novels_with_data(runner, temp_db):
     assert "10" in result.output  # Chapter for Novel B
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_list_novels_sort_by_title(runner, temp_db):
     """Test sorting novels by title."""
     # Add novels in reverse order
-    runner.invoke(app, ["novel", "add", "--title", "Z Novel"])
-    runner.invoke(app, ["novel", "add", "--title", "A Novel"])
+    runner.invoke(app, ["novel", "add", "Z Novel"])
+    runner.invoke(app, ["novel", "add", "A Novel"])
 
     result = runner.invoke(app, ["novel", "list", "--sort-by", "title"])
     assert result.exit_code == 0
@@ -76,16 +75,12 @@ def test_list_novels_sort_by_title(runner, temp_db):
     assert "A Novel" in data_lines[0]
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_list_novels_sort_by_chapter(runner, temp_db):
     """Test sorting novels by current chapter (descending)."""
-    runner.invoke(
-        app, ["novel", "add", "--title", "Low Chapter", "--current-chapter", "1"]
-    )
-    runner.invoke(
-        app, ["novel", "add", "--title", "High Chapter", "--current-chapter", "50"]
-    )
+    runner.invoke(app, ["novel", "add", "Low Chapter", "--current-chapter", "1"])
+    runner.invoke(app, ["novel", "add", "High Chapter", "--current-chapter", "50"])
 
     result = runner.invoke(app, ["novel", "list", "--sort-by", "current_chapter"])
     assert result.exit_code == 0
@@ -100,8 +95,8 @@ def test_list_novels_sort_by_chapter(runner, temp_db):
     assert "High Chapter" in data_lines[0]
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_list_novels_invalid_sort(runner, temp_db):
     """Test listing with invalid sort field."""
     result = runner.invoke(app, ["novel", "list", "--sort-by", "invalid"])
@@ -109,11 +104,11 @@ def test_list_novels_invalid_sort(runner, temp_db):
     assert "invalid sort field" in result.output.lower()
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_list_novels_ls_alias(runner, temp_db):
     """Test that 'ls' is an alias for 'list'."""
-    runner.invoke(app, ["novel", "add", "--title", "Test Novel"])
+    runner.invoke(app, ["novel", "add", "Test Novel"])
     result = runner.invoke(app, ["novel", "ls"])
     assert result.exit_code == 0
     assert "Test Novel" in result.output

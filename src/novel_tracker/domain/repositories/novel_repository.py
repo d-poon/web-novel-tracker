@@ -36,16 +36,14 @@ class NovelRepository:
 
     def list_novels(self):
         rows = execute_query(
-            "SELECT title, site, url, current_chapter,"
-            " last_read_date, notes FROM novels",
+            "SELECT * FROM novels",
             fetch_all=True,
         )
         return [row_to_novel(row) for row in rows]
 
     def get_novel_by_title(self, title: str) -> Novel:
         row = execute_query(
-            "SELECT title, site, url, current_chapter, last_read_date, notes "
-            "FROM novels WHERE title = ?",
+            "SELECT * FROM novels WHERE title = ? COLLATE NOCASE",
             params=(title,),
             fetch_one=True,
         )
@@ -65,7 +63,7 @@ class NovelRepository:
             f"""
             UPDATE novels
             SET {", ".join(fields)}
-            WHERE title = ?
+            WHERE title = ? COLLATE NOCASE
         """,
             params=values,
             fetch_one=False,
@@ -73,4 +71,6 @@ class NovelRepository:
         )
 
     def delete_novel(self, title: str):
-        execute_query("DELETE FROM novels WHERE title = ?", params=(title,))
+        execute_query(
+            "DELETE FROM novels WHERE title = ? COLLATE NOCASE", params=(title,)
+        )

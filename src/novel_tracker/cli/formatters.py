@@ -3,7 +3,8 @@ from novel_tracker.domain.models.novel import Novel
 
 def format_novel_typer(novel) -> str:
     return (
-        f"{novel.title} ({novel.site}) - Chapter {novel.current_chapter} - "
+        f"{novel.title} - Site: {novel.site} "
+        f"- URL: {novel.url} - Chapter {novel.current_chapter} - "
         f"Last Read: {novel.last_read_date} - Notes: {novel.notes}"
     )
 

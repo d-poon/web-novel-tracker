@@ -15,9 +15,9 @@ runner.is_human_added = False
 runner.is_human_reviewed = True
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_added
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_added
+@pytest.mark.human_reviewed
 def test_db_init_success(runner, tmp_path, monkeypatch):
     """Test successful database initialization using a temporary DB file."""
     # Use a temporary database file
@@ -44,9 +44,9 @@ def test_db_init_success(runner, tmp_path, monkeypatch):
         assert len(tables) > 0  # Should have some tables
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_added
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_added
+@pytest.mark.human_reviewed
 def test_db_init_idempotent(runner, tmp_path, monkeypatch):
     """Test that db init can be run multiple times safely."""
     # Use a temporary database file

@@ -14,12 +14,12 @@ runner.is_human_added = False
 runner.is_human_reviewed = True
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_delete_novel_existing(runner, temp_db):
     """Test deleting an existing novel."""
     # Add a novel
-    runner.invoke(app, ["novel", "add", "--title", "Delete Test"])
+    runner.invoke(app, ["novel", "add", "Delete Test"])
 
     # Delete it
     result = runner.invoke(app, ["novel", "delete", "Delete Test"])
@@ -31,8 +31,8 @@ def test_delete_novel_existing(runner, temp_db):
     assert "Delete Test" not in list_result.output
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_delete_novel_nonexistent(runner, temp_db):
     """Test deleting a novel that doesn't exist."""
     result = runner.invoke(app, ["novel", "delete", "Nonexistent Novel"])
@@ -40,30 +40,30 @@ def test_delete_novel_nonexistent(runner, temp_db):
     assert "not found" in result.output.lower()
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_added
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_added
+@pytest.mark.human_reviewed
 def test_delete_novel_case_sensitive(runner, temp_db):
-    """Test that delete is case sensitive."""
-    runner.invoke(app, ["novel", "add", "--title", "Delete Case"])
+    """Test that delete is not case sensitive."""
+    runner.invoke(app, ["novel", "add", "Delete Case"])
 
     result = runner.invoke(app, ["novel", "delete", "delete case"])  # lowercase
     assert result.exit_code == 0  # Should find
-    assert "not found" in result.output.lower()
+    assert "not found" not in result.output.lower()
 
     # Verify it is gone
     list_result = runner.invoke(app, ["novel", "list"])
     assert "Delete Case" not in list_result.output
 
 
-@pytest.mark.is_ai_generated
-@pytest.mark.is_human_reviewed
+@pytest.mark.generated_by_ai
+@pytest.mark.human_reviewed
 def test_delete_novel_after_update(runner, temp_db):
     """Test deleting a novel that was previously updated."""
-    runner.invoke(app, ["novel", "add", "--title", "Update Then Delete"])
+    runner.invoke(app, ["novel", "add", "Update Then Delete"])
     runner.invoke(
         app,
-        ["novel", "update", "--title", "Update Then Delete", "--current-chapter", "10"],
+        ["novel", "update", "Update Then Delete", "--current-chapter", "10"],
     )
 
     result = runner.invoke(app, ["novel", "delete", "Update Then Delete"])
