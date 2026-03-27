@@ -19,7 +19,7 @@ class NovelRepository:
         execute_query(
             """
             INSERT INTO novels (title, site, url, current_chapter,
-              last_read_date, notes)
+            last_read_date, notes)
         VALUES (?, ?, ?, ?, ?, ?)
         """,
             params=(

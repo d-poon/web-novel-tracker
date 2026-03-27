@@ -239,22 +239,24 @@ class TestConstraintViolations:
     @pytest.mark.human_reviewed
     def test_insert_duplicate_unique_constraint(self, db_with_sample_novels):
         """Test that inserting duplicate titles (if unique constraint exists) fails."""
-        # Note: Current schema doesn't have UNIQUE constraint on title,
-        # so this test documents current behavior and serves as a regression test
-        # if we add UNIQUE constraint in future.
+        # Note: UNIQUE constraint now enforced, this now reflects that a novel with
+        # a duplicate title can not be added
+
         query = (
             "INSERT INTO novels (title, site, url, current_chapter) VALUES (?, ?, ?, ?)"
         )
         params = ("Minimal Novel", "Another Site", "http://another.com", 10)
 
-        # Should succeed with current schema (no uniqueness enforced)
-        result = execute_query(query, params)
-        assert result is None
+        # Should raise an error with UNIQUE constraint
+        with pytest.raises(sqlite3.IntegrityError) as exc_info:
+            execute_query(query, params)
 
-        # Verify both records exist
+        assert "UNIQUE constraint failed" in str(exc_info.value)
+
+        # Verify only one record exists
         verify_query = "SELECT COUNT(*) FROM novels WHERE title = ?"
         count_result = execute_query(verify_query, ("Minimal Novel",), fetch_all=True)
-        assert count_result[0][0] == 2
+        assert count_result[0][0] == 1
 
     @pytest.mark.generated_by_ai
     @pytest.mark.human_reviewed

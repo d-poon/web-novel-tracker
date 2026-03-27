@@ -87,17 +87,20 @@ class StatsRepository:
         )
         return row["count"] if row else 0
 
-    def recently_read_novels(self, days: int = 7):
-        rows = execute_query(
-            """
+    def recently_read_novels(self, days: int = 7, limit: int | None = None):
+        query = """
             SELECT *
             FROM novels
-            WHERE last_read_date >= DATE('now', ?)
-            """,
-            params=(f"-{days} days",),
-            fetch_all=True,
-        )
-        return [row_to_novel(row) for row in (rows or [])]
+            WHERE last_read_date IS NOT NULL
+            AND DATE(last_read_date) >= DATE('now','localtime', ?)
+            ORDER BY last_read_date DESC
+        """
+        rows = execute_query(query, params=(f"-{days} days",), fetch_all=True)
+        novels = [row_to_novel(row) for row in (rows or [])]
+
+        if limit:
+            novels = novels[:limit]
+        return novels
 
     def recently_updated_novels(self, limit: int = 5):
         rows = execute_query(

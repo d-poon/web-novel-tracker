@@ -82,7 +82,6 @@ def test_update_novel_partial(runner, temp_db):
 
     # Check that other fields remain
     get_result = runner.invoke(app, ["novel", "get", "Partial Update"])
-    print(get_result.output)
     assert "Original Site" in get_result.output
     assert "Chapter 20" in get_result.output
     assert "Original notes" in get_result.output
