@@ -1,0 +1,5 @@
+def validate_enum(value: str | None, enum_cls):
+    if value is None:
+        return
+    if value not in enum_cls._value2member_map_:
+        raise ValueError(f"{value} is not valid for {enum_cls.__name__}")
